@@ -28,14 +28,7 @@
       </div>
     <!-- ____________________________________________ -->
     <!-- contact form with Netlify Forms -->
-      <form 
-        name="contact" 
-        method="POST" 
-        data-netlify="true" 
-        netlify 
-        @submit.prevent="handleSubmit"
-        class="contact_form"
-      >
+      <form name="contact" method="POST" data-netlify="true" netlify class="contact_form">
         <!-- Required hidden input for Netlify -->
         <input type="hidden" name="form-name" value="contact" />
         
@@ -62,15 +55,7 @@
 
         <!-- ____________________________________________ -->
         <!-- submit button -->
-        <button type="submit" class="submit_btn" :disabled="submitting">
-          {{ submitting ? 'Sending...' : 'Send Message' }}
-        </button>
-        
-        <!-- ____________________________________________ -->
-        <!-- success message -->
-        <div v-if="submitted" class="success_message">
-          Thanks! Your message has been sent. I'll get back to you soon.
-        </div>
+        <button type="submit" class="submit_btn">Send Message</button>
       </form>
     </div>
   </div>
@@ -232,26 +217,9 @@
   font-weight: bold;
 }
 
-.submit_btn:hover:not(:disabled) {
+.submit_btn:hover {
   transform: scale(1.02);
   box-shadow: 0 5px 20px rgba(31, 100, 81, 0.4);
-}
-
-.submit_btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* ____________________________________________ */
-/* success message */
-.success_message {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: #1f6451;
-  color: white;
-  border-radius: 5px;
-  text-align: center;
-  border: 1px solid #58f58a;
 }
 
 /* ____________________________________________ */
@@ -262,41 +230,3 @@
   }
 }
 </style>
-
-<!-- ___________________________________________________________________________ -->
-<!-- JAVASCRIPT -->
-<script setup>
-import { ref } from 'vue'
-
-// Form state
-const submitting = ref(false)
-const submitted = ref(false)
-
-// Handle form submission
-const handleSubmit = async (event) => {
-  submitting.value = true
-  
-  const form = event.target
-  const formData = new FormData(form)
-  
-  try {
-    // Send to Netlify Forms
-    const response = await fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(formData).toString()
-    })
-    
-    if (response.ok) {
-      submitted.value = true
-      form.reset()
-    } else {
-      alert('Something went wrong. Please try again.')
-    }
-  } catch (error) {
-    alert('Network error. Please check your connection.')
-  } finally {
-    submitting.value = false
-  }
-}
-</script>
