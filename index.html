@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Choose your Mpho — Mpho M portfolio</title>
+  <meta name="description" content="Pick a pillar: design, illustration or code. The playful portfolio of Mpho Makwela.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chonburi&family=Press+Start+2P&family=DM+Sans:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+  <canvas id="fireflies" aria-hidden="true"></canvas>
+  <header class="site-header">
+    <a href="index.html" class="logo">Mpho M</a>
+    <nav>
+      <a href="about.html" data-nav="about">About</a>
+      <a href="portfolio.html" data-nav="portfolio">Portfolio</a>
+      <a href="contact.html" data-nav="contact">Contact</a>
+    </nav>
+    <button id="sound-toggle" class="pill-toggle" aria-pressed="true">🔊 sound on</button>
+  </header>
+
+  <main>
+    <section class="home fade-up">
+      <p class="tagline">jack of all trades, master of nonsense</p>
+      <h1>choose your <em>Mpho</em></h1>
+      <p class="sub">pick a pose, pick a pillar</p>
+      <p class="intro">Hi, I'm Mpho. I design, illustrate and code, usually with a hot drink nearby. Pick a pose to explore my work, or take one of the side quests below.</p>
+
+      <!-- the three characters get added here by script.js -->
+      <div class="pillars" id="pillars"><div class="ground"></div></div>
+
+      <p style="margin-top:2rem"><a href="portfolio.html" class="btn-game" data-sound="pick">see all the work</a></p>
+      <p class="row" id="side-quests"></p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

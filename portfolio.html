@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The work — Mpho M portfolio</title>
+  <meta name="description" content="Editorial illustrations, a comic, 3D rooms, shirt design and websites by Mpho Makwela.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chonburi&family=Press+Start+2P&family=DM+Sans:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="portfolio">
+  <canvas id="fireflies" aria-hidden="true"></canvas>
+  <header class="site-header">
+    <a href="index.html" class="logo">Mpho M</a>
+    <nav>
+      <a href="about.html" data-nav="about">About</a>
+      <a href="portfolio.html" data-nav="portfolio">Portfolio</a>
+      <a href="contact.html" data-nav="contact">Contact</a>
+    </nav>
+    <button id="sound-toggle" class="pill-toggle" aria-pressed="true">🔊 sound on</button>
+  </header>
+
+  <main>
+    <section class="wrap">
+      <div class="swingers" id="swingers"></div>
+      <div class="on-top">
+        <h1 class="page-title">the work</h1>
+        <div class="filters" id="filters"></div>
+        <!-- project cards get added here by script.js -->
+        <div class="grid" id="cards"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
