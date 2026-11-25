@@ -11,8 +11,11 @@ const gmailCompose = (subject = "Hi Mpho!", body = "") =>
   `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
 // ==== YOUR LINKS: paste the GitHub Pages links here once they're hosted ====
-const COMIC_SITE_URL = "https://codedwithmpho.github.io/vio202_comic_animated/";          // e.g. "https://codedwithmpho.github.io/clementine-comic/"
-const CHARACTER_SHEET_URL = "https://codedwithmpho.github.io/vio202_comic_infographic/";     // e.g. "https://codedwithmpho.github.io/character-sheet/"
+// On GitHub Pages the three sites are separate repos, so they need full addresses;
+// inside this project (and the preview) the folders sit side by side, so relative paths work.
+const ON_GITHUB = location.hostname === "codedwithmpho.github.io";
+const COMIC_SITE_URL = ON_GITHUB ? "https://codedwithmpho.github.io/vio202_comic_animated/" : "comic/index.html";
+const CHARACTER_SHEET_URL = ON_GITHUB ? "https://codedwithmpho.github.io/vio202_comic_infographic/" : "infographic/index.html";
 
 // Optional but recommended for the contact form: get a free key at https://web3forms.com
 // (type in mpho.m.official@gmail.com, they email you the key) and paste it here.
@@ -87,8 +90,8 @@ const PROJECTS = [
   { slug: "isometric-room", title: "Isometric 3D room in Illustrator", category: "design", cover: IMG + "iso_room.webp", blurb: "A real kitchen redrawn as a flat isometric illustration — drag the slider to compare it with the photo.", tools: ["Illustrator"] },
   { slug: "shirt", title: "Gentleness shirt design", category: "design", cover: IMG + "shirt_final.webp", blurb: "A retro character tee built around Galatians 5:22–23.", tools: ["Illustrator"] },
   { slug: "hill-climb", title: "Hill Climb Racing fan site", category: "code", cover: IMG + "web_hillclimb.webp", blurb: "A multi-page fan site with a game, newsletter, merch and fan club. Click to open the live site.", tools: ["HTML", "CSS", "JavaScript", "GitHub Pages"], external: "https://codedwithmpho.github.io/hill_climb_racing_site/", live: true },
-  { slug: "comic-site", title: "Clementine animated comic", category: "code", cover: IMG + "comic_cover.webp", blurb: "The Clementine in Between comic, built as its own website. Click to read it.", tools: ["HTML", "CSS", "JavaScript"], external: COMIC_SITE_URL, live: !!COMIC_SITE_URL, soon: !COMIC_SITE_URL },
-  { slug: "character-sheet-site", title: "Character infographic website", category: "code", cover: IMG + "sketch_official.webp", blurb: "An interactive character sheet for Clementine, built as a website.", tools: ["HTML", "CSS", "JavaScript"], external: CHARACTER_SHEET_URL, live: !!CHARACTER_SHEET_URL, soon: !CHARACTER_SHEET_URL },
+  { slug: "comic-site", title: "Clementine animated comic", category: "code", cover: IMG + "comic_cover.webp", blurb: "The Clementine in Between comic, built as its own website. Click to read it.", tools: ["HTML", "CSS", "JavaScript"], external: COMIC_SITE_URL, internal: true, live: !!COMIC_SITE_URL, soon: !COMIC_SITE_URL },
+  { slug: "character-sheet-site", title: "Character infographic website", category: "code", cover: IMG + "sketch_official.webp", blurb: "An interactive character sheet for Clementine, built as a website.", tools: ["HTML", "CSS", "JavaScript"], external: CHARACTER_SHEET_URL, internal: true, live: !!CHARACTER_SHEET_URL, soon: !CHARACTER_SHEET_URL },
 ];
 
 const SONGS = {
@@ -200,10 +203,10 @@ document.addEventListener("mouseover", (e) => {
 });
 
 /** Makes a clickable Mpho character that hops, talks and makes a sound. */
-function makeCharacter(pose, { cls = "", float = false, sound = "boing", passive = false, onPoke, alt } = {}) {
+function makeCharacter(pose, { cls = "", float = false, breathe = false, sound = "boing", passive = false, onPoke, alt } = {}) {
   const wrap = document.createElement("span");
   wrap.className = `character ${passive ? "passive" : ""} ${cls}`;
-  wrap.innerHTML = `<span class="inner ${float ? "float" : ""}"><img src="${CHARACTERS[pose]}" alt="${esc(alt || `Mpho character, ${pose} pose`)}" draggable="false"></span>`;
+  wrap.innerHTML = `<span class="inner ${float ? "float" : ""} ${breathe ? "breathe" : ""}"><img src="${CHARACTERS[pose]}" alt="${esc(alt || `Mpho character, ${pose} pose`)}" draggable="false"></span>`;
   const img = $("img", wrap);
   let n = 0, timer;
   const talk = () => {
@@ -296,7 +299,7 @@ function initHome() {
   const sq = $("#side-quests");
   SIDE_QUESTS.forEach((q) => {
     if (q.url) {
-      sq.insertAdjacentHTML("beforeend", `<a href="${q.url}" target="_blank" rel="noopener noreferrer" class="btn-ghost-game" data-sound="whoosh">${esc(q.label)} ↗</a>`);
+      sq.insertAdjacentHTML("beforeend", `<a href="${q.url}" class="btn-ghost-game" data-sound="whoosh">${esc(q.label)} →</a>`);
       return;
     }
     const b = document.createElement("button");
@@ -334,9 +337,9 @@ function initPortfolio() {
     else thumb = `<div class="thumb empty">🛋️</div>`;
     if (p.soon) thumb = thumb.replace("</div>", `<span class="live-badge">coming soon</span></div>`);
     const href = p.soon ? "#" : p.external || `project.html?p=${p.slug}`;
-    const ext = p.soon ? ` data-soon="1" data-sound="pop"` : p.external ? ` target="_blank" rel="noopener noreferrer" data-sound="whoosh"` : ` data-sound="pick"`;
+    const ext = p.soon ? ` data-soon="1" data-sound="pop"` : p.external ? (p.internal ? ` data-sound="whoosh"` : ` target="_blank" rel="noopener noreferrer" data-sound="whoosh"`) : ` data-sound="pick"`;
     return `<a class="card tilt fade-up" href="${href}"${ext}>${thumb}<div class="body">
-      <div class="title-row"><b>${esc(p.title)}</b>${p.external || p.soon ? '<span class="accent">↗</span>' : ""}</div>
+      <div class="title-row"><b>${esc(p.title)}</b>${p.external || p.soon ? `<span class="accent">${p.internal ? "→" : "↗"}</span>` : ""}</div>
       <p>${esc(p.blurb)}</p>
       <div class="tags"><span class="tag cat">${p.category === "illustration" ? "illustrations" : p.category}</span>${p.tools.map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>
     </div></a>`;
@@ -577,7 +580,7 @@ function initAbout() {
     noteN++;
   });
 
-  $("#me-char").appendChild(makeCharacter("me", { float: true, sound: "giggle", alt: "Mpho" }));
+  $("#me-char").appendChild(makeCharacter("me", { breathe: true, sound: "giggle", alt: "Mpho" }));
 
   // YouTube needs to know which website is playing the video, otherwise it shows "video unavailable / error 153".
   const origin = location.protocol.startsWith("http") ? `&origin=${encodeURIComponent(location.origin)}` : "";
@@ -691,12 +694,16 @@ function initAbout() {
     play("open");
     if (openWins[id]) { openWins[id].style.zIndex = 30 + ++zTop; return; }
     const cfg = WINDOWS[id], n = Object.keys(openWins).length;
-    const x = Math.max(10, stage.getBoundingClientRect().width / 2 - 190 + (n % 4) * 34 - 60), y = 40 + (n % 4) * 34;
+    // open windows under Mpho's chin so they never cover her face (or the folders on the sides)
+    const sr = stage.getBoundingClientRect(), mr = $("#me-char img").getBoundingClientRect();
+    const chin = mr.top - sr.top + mr.height * 0.4, step = n % 4;
+    const x = Math.max(10, sr.width / 2 - cfg.w / 2 + (step % 2 ? 1 : -1) * step * 18), y = Math.max(40, chin + step * 26);
+    const maxH = Math.max(240, sr.height - y - 12);
     const w = document.createElement("div");
     w.className = "window";
     w.setAttribute("role", "dialog");
     w.setAttribute("aria-label", cfg.title);
-    w.style.cssText = `z-index:${30 + ++zTop};--wx:${x}px;--wy:${y}px;--ww:${cfg.w}px`;
+    w.style.cssText = `z-index:${30 + ++zTop};--wx:${x}px;--wy:${y}px;--ww:${cfg.w}px;--wmax:${maxH}px`;
     w.innerHTML = `<div class="win-bar"><span class="pixel">${cfg.title}</span><button class="win-close" aria-label="Close window">✕</button></div><div class="win-body">${cfg.html()}</div>`;
     w.addEventListener("pointerdown", () => (w.style.zIndex = 30 + ++zTop));
     // drag by the title bar
@@ -740,6 +747,8 @@ function initAbout() {
     folders.appendChild(b);
   });
 }
+
+
 
 /* ---------------- CONTACT ---------------- */
 function initContact() {
@@ -804,7 +813,7 @@ function initTransitions() {
     const a = e.target.closest("a[href]");
     if (!a || a.target === "_blank" || e.ctrlKey || e.metaKey || e.shiftKey) return;
     const href = a.getAttribute("href");
-    if (!/^[\w-]+\.html/.test(href) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!/^[\w-]+(\/[\w-]+)?\.html/.test(href) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     e.preventDefault();
     play("whoosh");
     wipe.classList.remove("out"); void wipe.offsetWidth; wipe.classList.add("in");
